@@ -24,3 +24,13 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+.menu-item {
+  width:100%;
+  text-align:left;
+  padding:8px 12px;
+  font-size:14px;
+}
+
+.menu-item:hover {
+  background:#27272a;
+}

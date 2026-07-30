@@ -1,0 +1,23 @@
+My name is Rony Ghanem.
+
+I am a Software Developer.
+
+Skills:
+- Next.js
+- React
+- Node.js
+- MongoDB
+- AI Integration
+- Tailwind CSS
+
+Projects:
+- Talent Radar AI
+- Secure Chat Application
+- Personal Trainer Website
+- Tic Tac Toe Game
+
+Career Goal:
+Become a full-stack software engineer specializing in AI-powered applications.
+
+Education:
+Computer Science student.
