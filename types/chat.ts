@@ -1,6 +1,6 @@
-export interface Message{
+export interface Message {
 
-  role:"user"|"assistant";
+  role:"user" | "assistant";
 
   content:string;
 
@@ -8,7 +8,8 @@ export interface Message{
 
 }
 
-export interface Chat{
+
+export interface Chat {
 
   id:string;
 

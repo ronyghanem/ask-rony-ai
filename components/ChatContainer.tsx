@@ -4,16 +4,18 @@ import { useEffect, useRef } from "react";
 import Message from "./Message";
 
 
-interface MessageType {
+interface MessageType{
 
-  role:"user" | "assistant";
+  role:"user"|"assistant";
 
   content:string;
+
+  timestamp:string;
 
 }
 
 
-interface Props {
+interface Props{
 
   messages:MessageType[];
 
