@@ -12,6 +12,18 @@ const groq = new Groq({
 
 
 
+// Ordered list of models to try.
+// If one hits a rate limit, we fall back to the next.
+const MODEL_CHAIN = [
+
+  "llama-3.3-70b-versatile",
+
+  "llama-3.1-8b-instant"
+
+];
+
+
+
 
 
 function getLanguage(language:string){
@@ -115,6 +127,140 @@ return knowledge;
 
 
 
+function isRateLimitError(error:any){
+
+
+return (
+
+error?.error?.error?.code === "rate_limit_exceeded"
+
+||
+
+error?.status === 429
+
+);
+
+
+}
+
+
+
+
+
+
+
+async function createCompletionWithFallback(
+
+messages:any[]
+
+){
+
+
+let lastError:any = null;
+
+
+
+
+for(const model of MODEL_CHAIN){
+
+
+try{
+
+
+console.log(
+
+"TRYING MODEL:",
+
+model
+
+);
+
+
+
+const completion = await groq.chat.completions.create({
+
+
+model,
+
+
+stream:true,
+
+
+temperature:0.4,
+
+
+max_tokens:1000,
+
+
+messages
+
+
+});
+
+
+
+return {
+
+completion,
+
+modelUsed:model
+
+};
+
+
+}
+
+catch(error:any){
+
+
+lastError = error;
+
+
+
+if(isRateLimitError(error)){
+
+
+console.warn(
+
+`RATE LIMIT on ${model}, trying next fallback...`
+
+);
+
+
+continue;
+
+
+}
+
+
+
+// Not a rate limit issue — a real bug (bad key, bad request, etc).
+// Don't hide it behind a fallback, throw immediately.
+
+throw error;
+
+
+}
+
+
+}
+
+
+
+
+// Every model in the chain was rate limited
+
+throw lastError;
+
+
+}
+
+
+
+
+
+
+
 
 export async function POST(req:Request){
 
@@ -169,25 +315,7 @@ getLanguage(language);
 
 
 
-
-const completion = await groq.chat.completions.create({
-
-
-
-model:"llama-3.3-70b-versatile",
-
-
-stream:true,
-
-
-temperature:0.4,
-
-
-max_tokens:1000,
-
-
-
-messages:[
+const messages = [
 
 
 {
@@ -328,11 +456,32 @@ content:message
 
 
 
-]
+];
 
 
 
-});
+
+
+
+
+const {
+
+completion,
+
+modelUsed
+
+} = await createCompletionWithFallback(messages);
+
+
+
+
+console.log(
+
+"MODEL USED:",
+
+modelUsed
+
+);
 
 
 
@@ -441,7 +590,13 @@ headers:{
 
 "Connection":
 
-"keep-alive"
+"keep-alive",
+
+
+
+"X-Model-Used":
+
+modelUsed
 
 
 }
@@ -454,7 +609,7 @@ headers:{
 
 }
 
-catch(error){
+catch(error:any){
 
 
 console.error(
@@ -464,6 +619,33 @@ console.error(
 error
 
 );
+
+
+
+
+if(isRateLimitError(error)){
+
+
+return NextResponse.json(
+
+{
+
+error:"Rony is getting a lot of questions right now. Please try again in a few minutes."
+
+},
+
+{
+
+status:429
+
+}
+
+);
+
+
+}
+
+
 
 
 
