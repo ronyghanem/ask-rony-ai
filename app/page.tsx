@@ -1,10 +1,9 @@
 "use client";
 
 import {
-    useState,
-    useEffect
+  useState,
+  useEffect
 } from "react";
-
 
 import Sidebar from "@/components/Sidebar";
 import Navbar from "@/components/Navbar";
@@ -12,9 +11,7 @@ import ChatHeader from "@/components/ChatHeader";
 import ChatContainer from "@/components/ChatContainer";
 import ChatInput from "@/components/ChatInput";
 
-
 import { Chat } from "@/types/chat";
-
 
 
 export default function Home(){
@@ -22,7 +19,7 @@ export default function Home(){
 
 const [chats,setChats]=useState<Chat[]>([]);
 
-const [activeChat,setActiveChat]=useState<string|null>(null);
+const [activeChat,setActiveChat]=useState<string | null>(null);
 
 const [loading,setLoading]=useState(false);
 
@@ -52,13 +49,11 @@ JSON.parse(savedChats)
 }
 
 
-
 if(savedActive){
 
 setActiveChat(savedActive);
 
 }
-
 
 
 },[]);
@@ -75,15 +70,14 @@ localStorage.setItem(
 JSON.stringify(chats)
 );
 
-
 },[chats]);
 
 
 
 
 
-useEffect(()=>{
 
+useEffect(()=>{
 
 if(activeChat){
 
@@ -94,9 +88,7 @@ activeChat
 
 }
 
-
 },[activeChat]);
-
 
 
 
@@ -105,12 +97,12 @@ activeChat
 
 function newChat(){
 
+const id:string =
+crypto.randomUUID();
 
-const id:string = crypto.randomUUID();
 
 
-
-const chat:Chat = {
+const chat:Chat={
 
 id,
 
@@ -131,9 +123,9 @@ chat,
 ]);
 
 
-
 setActiveChat(id);
 
+setSidebarOpen(false);
 
 }
 
@@ -150,13 +142,12 @@ answer:string,
 chatId:string
 ){
 
+
 try{
 
 
 const res = await fetch(
-
 "/api/title",
-
 {
 
 method:"POST",
@@ -181,7 +172,6 @@ answer
 
 
 
-
 const data =
 await res.json();
 
@@ -192,13 +182,12 @@ return;
 
 
 
-
 setChats(prev=>
 
 prev.map(chat=>{
 
 
-if(chat.id !== chatId)
+if(chat.id!==chatId)
 
 return chat;
 
@@ -224,7 +213,7 @@ title:data.title
 catch(error){
 
 console.error(
-"TITLE ERROR:",
+"TITLE ERROR",
 error
 );
 
@@ -240,15 +229,10 @@ error
 
 
 
-
 async function sendAIMessage(
-
 message:string,
-
 chatId:string,
-
 makeTitle=true
-
 ){
 
 
@@ -260,30 +244,21 @@ try{
 
 
 const language =
-
 localStorage.getItem("language")
-
 ||
-
 "en-US";
 
 
 
-
-
 const res = await fetch(
-
 "/api/chat",
-
 {
 
 method:"POST",
 
 headers:{
 
-"Content-Type":
-
-"application/json"
+"Content-Type":"application/json"
 
 },
 
@@ -302,13 +277,11 @@ language
 
 
 
-
 if(!res.body)
 
 throw new Error(
 "No response body"
 );
-
 
 
 
@@ -328,13 +301,14 @@ let answer="";
 
 
 
+// Add empty assistant message
 
 setChats(prev=>
 
 prev.map(chat=>{
 
 
-if(chat.id !== chatId)
+if(chat.id!==chatId)
 
 return chat;
 
@@ -355,7 +329,6 @@ role:"assistant",
 content:"",
 
 timestamp:
-
 new Date()
 .toLocaleTimeString()
 
@@ -369,6 +342,7 @@ new Date()
 })
 
 );
+
 
 
 
@@ -394,15 +368,10 @@ break;
 
 
 answer += decoder.decode(
-
 value,
-
 {
-
 stream:true
-
 }
-
 );
 
 
@@ -413,7 +382,7 @@ setChats(prev=>
 prev.map(chat=>{
 
 
-if(chat.id !== chatId)
+if(chat.id!==chatId)
 
 return chat;
 
@@ -423,15 +392,15 @@ return {
 
 ...chat,
 
-
 messages:
 
-chat.messages.map((msg,index)=>{
+chat.messages.map(
+(msg,index)=>{
 
 
 if(
 
-index === chat.messages.length - 1
+index === chat.messages.length-1
 
 &&
 
@@ -454,8 +423,10 @@ content:answer
 return msg;
 
 
+}
 
-})
+)
+
 
 };
 
@@ -465,11 +436,7 @@ return msg;
 );
 
 
-
 }
-
-
-
 
 
 
@@ -489,16 +456,14 @@ chatId
 
 
 
-
 }
 
 catch(error){
 
 console.error(
-"AI ERROR:",
+"AI ERROR",
 error
 );
-
 
 }
 
@@ -510,9 +475,12 @@ setLoading(false);
 
 
 }
-async function sendMessage(message:string){
+async function sendMessage(
+message:string
+){
 
 if(!message.trim())
+
 return;
 
 
@@ -521,7 +489,7 @@ let chatId:string;
 
 
 
-if(activeChat !== null){
+if(activeChat){
 
 chatId = activeChat;
 
@@ -530,12 +498,13 @@ chatId = activeChat;
 else{
 
 
-const newId:string = crypto.randomUUID();
+chatId = crypto.randomUUID();
 
 
-const newChat:Chat = {
 
-id:newId,
+const newChat:Chat={
+
+id:chatId,
 
 title:"New conversation",
 
@@ -546,30 +515,30 @@ messages:[]
 
 
 setChats(prev=>[
+
 newChat,
+
 ...prev
+
 ]);
 
 
 
-setActiveChat(newId);
-
-
-
-chatId = newId;
+setActiveChat(chatId);
 
 }
 
 
 
 
+// Add user message
 
 setChats(prev=>
 
 prev.map(chat=>{
 
 
-if(chat.id !== chatId)
+if(chat.id!==chatId)
 
 return chat;
 
@@ -589,7 +558,8 @@ role:"user",
 
 content:message,
 
-timestamp:new Date()
+timestamp:
+new Date()
 .toLocaleTimeString()
 
 }
@@ -599,11 +569,9 @@ timestamp:new Date()
 };
 
 
-
 })
 
 );
-
 
 
 
@@ -616,7 +584,6 @@ chatId
 );
 
 
-
 }
 
 
@@ -626,19 +593,14 @@ chatId
 
 
 
-
 async function regenerateMessage(
-
 index:number
-
 ){
 
 
-
-const chat = chats.find(
-
+const chat =
+chats.find(
 c=>c.id===activeChat
-
 );
 
 
@@ -650,12 +612,8 @@ return;
 
 
 
-
 const userMessage =
-
 chat.messages[index-1];
-
-
 
 
 
@@ -663,7 +621,7 @@ if(
 
 !userMessage ||
 
-userMessage.role !== "user"
+userMessage.role!=="user"
 
 )
 
@@ -673,15 +631,14 @@ return;
 
 
 
-
-// Remove old assistant message
+// remove old AI answer
 
 setChats(prev=>
 
 prev.map(c=>{
 
 
-if(c.id !== activeChat)
+if(c.id!==activeChat)
 
 return c;
 
@@ -692,15 +649,11 @@ return {
 ...c,
 
 messages:c.messages.slice(
-
 0,
-
 index
-
 )
 
 };
-
 
 
 })
@@ -722,7 +675,6 @@ false
 );
 
 
-
 }
 
 
@@ -733,9 +685,7 @@ false
 
 
 function deleteChat(
-
 id:string
-
 ){
 
 
@@ -743,7 +693,7 @@ setChats(prev=>
 
 prev.filter(
 
-chat=>chat.id !== id
+chat=>chat.id!==id
 
 )
 
@@ -755,15 +705,10 @@ if(activeChat===id){
 
 setActiveChat(null);
 
-localStorage.removeItem(
-"active-chat"
-);
-
 }
 
 
 }
-
 
 
 
@@ -778,11 +723,7 @@ chats.find(
 
 chat=>chat.id===activeChat
 
-)
-
-?.messages || [];
-
-
+)?.messages || [];
 
 
 
@@ -795,19 +736,74 @@ return (
 <div
 
 className="
-
 flex
-
 h-screen
-
+overflow-hidden
 bg-zinc-100
-
 dark:bg-zinc-900
-
 "
 
 >
 
+
+{/* Mobile overlay */}
+
+{
+
+sidebarOpen &&
+
+(
+
+<div
+
+className="
+fixed
+inset-0
+bg-black/50
+z-40
+md:hidden
+"
+
+onClick={()=>setSidebarOpen(false)}
+
+></div>
+
+)
+
+}
+
+
+
+
+
+{/* Sidebar */}
+
+<div
+
+className={`
+fixed
+md:static
+z-50
+h-full
+transition-transform
+duration-300
+
+${
+sidebarOpen
+
+?
+
+"translate-x-0"
+
+:
+
+"-translate-x-full md:translate-x-0"
+
+}
+
+`}
+
+>
 
 
 <Sidebar
@@ -818,7 +814,15 @@ activeChat={activeChat}
 
 onNewChat={newChat}
 
-onSelectChat={setActiveChat}
+
+onSelectChat={(id)=>{
+
+setActiveChat(id);
+
+setSidebarOpen(false);
+
+}}
+
 
 onDeleteChat={deleteChat}
 
@@ -828,6 +832,7 @@ onPinChat={()=>{}}
 
 onArchiveChat={()=>{}}
 
+
 sidebarOpen={sidebarOpen}
 
 setSidebarOpen={setSidebarOpen}
@@ -835,31 +840,40 @@ setSidebarOpen={setSidebarOpen}
 />
 
 
+</div>
 
 
 
 
+
+
+
+{/* Main */}
 
 
 <div
 
 className="
-
 flex-1
-
 flex
-
 flex-col
-
+min-w-0
 "
 
 >
 
 
-<Navbar/>
+<Navbar
+
+onMenuClick={()=>setSidebarOpen(true)}
+
+/>
+
+
+
+
 
 <ChatHeader/>
-
 
 
 
@@ -876,9 +890,6 @@ onSuggestionClick={sendMessage}
 onRegenerate={regenerateMessage}
 
 />
-
-
-
 
 
 
@@ -901,7 +912,6 @@ loading={loading}
 
 
 </div>
-
 
 );
 
