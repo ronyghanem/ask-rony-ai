@@ -734,15 +734,15 @@ chat=>chat.id===activeChat
 return (
 
 <div
-
 className="
 flex
+w-full
+max-w-full
 h-screen
 overflow-hidden
 bg-zinc-100
 dark:bg-zinc-900
 "
-
 >
 
 
