@@ -504,31 +504,45 @@ if(!message.trim())
 return;
 
 
-let chatId = activeChat;
+let chatId: string;
 
 
-// Create new chat if none exists
-if(chatId === null){
+if(activeChat){
+
+chatId = activeChat;
+
+}
+
+else{
+
 
 chatId = crypto.randomUUID();
 
 
 const newChat: Chat = {
+
 id: chatId,
+
 title:"New conversation",
+
 messages:[]
+
 };
 
 
 setChats(prev=>[
+
 newChat,
+
 ...prev
+
 ]);
 
 
 setActiveChat(chatId);
 
 }
+
 
 
 
@@ -576,7 +590,6 @@ timestamp:new Date()
 
 
 
-
 await sendAIMessage(
 message,
 chatId
@@ -584,7 +597,6 @@ chatId
 
 
 }
-
 
 
 
