@@ -1,0 +1,15 @@
+Technical Skills:
+
+Skills
+Programming
+Languages
+: HTML, CSS, JavaScript, PHP, C++, C#, Java, Python, Nextjs
+Machine Learning
+(ML)
+: Classification, Regression, Clustering, Reinforcement Learning
+Version Control : Git, GitHub
+Computer Skills : Microsoft Word, Microsoft Excel, Microsoft PowerPoint,Visual Studio, VS Code, NetBeans
+Soft Skills : Communication & Teamwork,Problem-Solving & Critical Thinking, Leadership & Initiative, Time Management
+& Attention to Detail, Adaptability & Creativity
+Languages : Fluent in English, Proficient in Arabic
+Databases : SQL Server

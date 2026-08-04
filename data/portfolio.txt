@@ -1,0 +1,14 @@
+Portfolio Website:
+
+Contains:
+
+- Personal information
+- Projects
+- Skills
+- Contact information
+
+Main technologies:
+
+Next.js
+React
+Tailwind CSS

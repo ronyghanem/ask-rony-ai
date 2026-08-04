@@ -1,137 +1,347 @@
 "use client";
 
+import React from "react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
-interface Props{
 
-  role:"user"|"assistant";
+interface Props {
 
-  content:string;
+role:"user"|"assistant";
 
-  timestamp:string;
+content:string;
+
+timestamp:string;
+
+onRegenerate:()=>void;
 
 }
 
+
+
 export default function Message({
 
-  role,
+role,
 
-  content,
+content,
 
-  timestamp
+timestamp,
+
+onRegenerate
 
 }:Props){
 
-  const isUser =
-    role==="user";
-
-  return (
-
-    <div
-      className="
-      mb-6
-      "
-    >
-
-      <div
-        className={`
-        flex
-        items-center
-        gap-2
-        mb-2
-
-        ${
-          isUser
-          ? "justify-end"
-          : "justify-start"
-        }
-        `}
-      >
-
-        <div
-          className="
-          w-8
-          h-8
-          rounded-full
-          bg-zinc-700
-          flex
-          items-center
-          justify-center
-          text-sm
-          "
-        >
-
-          {
-            isUser
-            ? "👤"
-            : "🤖"
-          }
-
-        </div>
 
 
-        <div
-          className="
-          text-xs
-          text-zinc-400
-          "
-        >
-
-          {
-            isUser
-            ? "You"
-            : "Rony AI"
-          }
-
-          {" • "}
-
-          {timestamp}
-
-        </div>
-
-      </div>
+const isUser = role==="user";
 
 
-      <div
-        className={`
-        max-w-[80%]
-        rounded-2xl
-        px-4
-        py-3
 
-        ${
-          isUser
+return (
 
-          ? `
-            ml-auto
-            bg-blue-600
-            text-white
-          `
+<div
 
-          : `
-            bg-zinc-800
-            text-white
-          `
-        }
-        `}
-      >
+className={`
 
-        {
-          isUser
+flex
 
-          ? content
+gap-3
 
-          : (
-            <ReactMarkdown>
-              {content}
-            </ReactMarkdown>
-          )
-        }
+my-6
 
-      </div>
+${
 
-    </div>
+isUser
 
-  );
+?
+
+"justify-end"
+
+:
+
+"justify-start"
+
+}
+
+`}
+
+>
+
+
+
+
+
+{/* Avatar */}
+
+<div
+
+className={`
+
+w-9
+
+h-9
+
+rounded-full
+
+flex
+
+items-center
+
+justify-center
+
+text-white
+
+flex-shrink-0
+
+
+${
+
+isUser
+
+?
+
+"bg-blue-600"
+
+:
+
+"bg-black dark:bg-white dark:text-black"
+
+}
+
+`}
+
+>
+
+{
+
+isUser
+
+?
+
+"👤"
+
+:
+
+"🤖"
+
+}
+
+</div>
+
+
+
+
+
+
+
+<div
+
+className={`
+
+max-w-3xl
+
+rounded-2xl
+
+px-5
+
+py-4
+
+
+${
+
+isUser
+
+?
+
+"bg-blue-600 text-white"
+
+:
+
+"bg-white dark:bg-zinc-800 text-black dark:text-white"
+
+}
+
+`}
+
+>
+
+
+
+
+
+<div
+
+className="
+
+text-xs
+
+opacity-60
+
+mb-2
+
+"
+
+>
+
+{
+
+isUser
+
+?
+
+"You"
+
+:
+
+"Rony AI"
+
+}
+
+ • {timestamp}
+
+</div>
+
+
+
+
+
+
+
+
+<div
+
+className="
+
+prose
+
+dark:prose-invert
+
+max-w-none
+
+text-sm
+
+leading-7
+
+"
+
+>
+
+
+<ReactMarkdown
+
+remarkPlugins={[remarkGfm]}
+
+>
+
+{content}
+
+</ReactMarkdown>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+{
+
+!isUser && (
+
+<div
+
+className="
+
+flex
+
+gap-4
+
+mt-4
+
+text-xs
+
+text-zinc-500
+
+"
+
+>
+
+
+<button
+
+onClick={()=>navigator.clipboard.writeText(content)}
+
+>
+
+📋 Copy
+
+</button>
+
+
+
+
+
+<button
+
+onClick={()=>{
+
+const speech =
+new SpeechSynthesisUtterance(content);
+
+speech.lang =
+localStorage.getItem("language")
+||
+"en-US";
+
+
+window.speechSynthesis.speak(speech);
+
+
+}}
+
+>
+
+🔊 Listen
+
+</button>
+
+
+
+
+
+
+<button
+
+onClick={onRegenerate}
+
+>
+
+↻ Regenerate
+
+</button>
+
+
+
+</div>
+
+)
+
+}
+
+
+
+</div>
+
+
+
+</div>
+
+
+);
+
 
 }

@@ -1,0 +1,31 @@
+Profesional Experience :
+
+Freelance Web Developer
+Jan 2024 – Present
+• Developed and delivered 10+ responsive web applications using modern web technologies, implementing user-focused features and optimizing
+functionality across desktop and mobile platforms.
+• Engineered a PHP-based search engine featuring TF-IDF ranking, cosine similarity, query correction, and an interactive HTML/CSS interface,
+enabling accurate and efficient text retrieval.
+• Built an advanced 3D model viewer with Three.js supporting GLTF, OBJ, and STL formats, incorporating clipping tools, annotations,
+measurements, GUI controls, and state persistence to enhance model visualization and analysis.
+• Collaborated with clients to gather requirements, troubleshoot technical issues, and deliver customized web solutions aligned with project
+objectives.
+Programming Instructor – Prodigy Mind Center
+Nov 2025 – Present
+• Taught Object-Oriented Programming (OOP) and Data Structures to 20+ students through hands-on coding exercises, practical projects, and
+real-world problem-solving scenarios.
+• Mentored students individually, helping strengthen their understanding of algorithms, software design principles, debugging techniques, and
+programming best practices.
+• Designed and delivered engaging learning activities that improved students' logical thinking, coding proficiency, and confidence in software
+development concepts.
+• Evaluated student progress and adapted teaching approaches to accommodate different learning styles and skill levels.
+Web Developer Intern — Prodigy InfoTech (Remote)
+Sep 2025 – Oct 2025
+• Developed responsive web applications and interactive front-end features, improving usability and ensuring consistent performance across
+multiple devices and screen sizes.
+• Implemented responsive design techniques, API integrations, and dynamic user interface components to create functional and user-friendly
+web experiences.
+• Maintained project documentation and source code through GitHub, demonstrating effective version control practices and transparent
+development workflows.
+• Showcased project outcomes and technical insights on LinkedIn, highlighting continuous learning and professional growth throughout the
+internship.

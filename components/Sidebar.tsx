@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Chat } from "@/types/chat";
+import { getTranslation } from "@/src/i18n";
 
 
 interface Props {
@@ -21,7 +22,6 @@ interface Props {
   onPinChat:(id:string)=>void;
 
   onArchiveChat:(id:string)=>void;
-
 
   sidebarOpen:boolean;
 
@@ -56,7 +56,77 @@ export default function Sidebar({
 }:Props){
 
 
+
 const [openMenu,setOpenMenu]=useState<string|null>(null);
+
+const [search,setSearch]=useState("");
+
+const [t,setT]=useState<any>(null);
+
+
+
+
+
+// update language instantly
+
+useEffect(()=>{
+
+
+function update(){
+
+setT(getTranslation());
+
+}
+
+
+update();
+
+
+window.addEventListener(
+"languageChanged",
+update
+);
+
+
+
+return ()=>{
+
+window.removeEventListener(
+"languageChanged",
+update
+);
+
+};
+
+
+},[]);
+
+
+
+
+
+
+const filteredChats =
+chats.filter(chat=>
+
+chat.title
+.toLowerCase()
+.includes(
+search.toLowerCase()
+)
+
+);
+
+
+
+
+
+if(!t)
+
+return null;
+
+
+
 
 
 
@@ -70,9 +140,7 @@ sidebarOpen && (
 
 <div
 
-onClick={()=>
-setSidebarOpen(false)
-}
+onClick={()=>setSidebarOpen(false)}
 
 className="
 fixed
@@ -90,6 +158,7 @@ md:hidden
 
 
 
+
 <aside
 
 className={`
@@ -100,20 +169,27 @@ md:relative
 
 z-50
 
-
 w-64
 
 h-screen
 
 
-bg-zinc-950
+bg-white
+
+dark:bg-zinc-950
+
 
 border-r
 
-border-zinc-800
+border-zinc-200
+
+dark:border-zinc-800
 
 
-text-white
+text-black
+
+dark:text-white
+
 
 p-4
 
@@ -126,7 +202,6 @@ flex-col
 transition-transform
 
 duration-300
-
 
 
 ${
@@ -147,86 +222,147 @@ sidebarOpen
 >
 
 
-<div
 
-className="
-flex
-items-center
-justify-between
-mb-4
-"
 
->
 
 <button
 
 onClick={onNewChat}
 
 className="
+
 border
-border-zinc-700
+
+border-zinc-300
+
+dark:border-zinc-700
+
+
 rounded-lg
+
 py-3
-w-full
-hover:bg-zinc-800
+
+
+hover:bg-zinc-100
+
+dark:hover:bg-zinc-800
+
+
+transition
+
 "
 
 >
 
-+ New Chat
+{t.newChat}
 
 </button>
 
 
 
-<button
 
-onClick={()=>
-setSidebarOpen(false)
+
+
+
+<input
+
+
+value={search}
+
+
+onChange={(e)=>
+setSearch(e.target.value)
 }
 
+
+placeholder={t.search}
+
+
 className="
-md:hidden
-ml-2
-text-zinc-400
-text-xl
+
+mt-4
+
+w-full
+
+rounded-lg
+
+px-3
+
+py-2
+
+
+bg-zinc-100
+
+dark:bg-zinc-900
+
+
+border
+
+border-zinc-300
+
+dark:border-zinc-700
+
+
+outline-none
+
+
+text-sm
+
+"
+
+/>
+
+
+
+
+
+
+
+<div
+
+className="
+
+mt-4
+
+flex-1
+
+overflow-y-auto
+
 "
 
 >
 
-✕
-
-</button>
-
-
-</div>
 
 
 
+<p
 
+className="
 
-<div className="
-mt-4
-flex-1
-overflow-y-auto
-">
-
-
-<p className="
 text-xs
-text-zinc-500
-mb-3
-">
 
-Chats
+text-zinc-500
+
+mb-3
+
+"
+
+>
+
+{t.chats}
 
 </p>
 
 
 
 
+
+
+
+
 {
-chats.map(chat=>(
+
+filteredChats.map(chat=>(
 
 
 <div
@@ -256,17 +392,19 @@ mb-2
 cursor-pointer
 
 
+transition
+
 
 ${
 activeChat===chat.id
 
 ?
 
-"bg-zinc-800"
+"bg-zinc-200 dark:bg-zinc-800"
 
 :
 
-"hover:bg-zinc-900"
+"hover:bg-zinc-100 dark:hover:bg-zinc-900"
 
 }
 
@@ -275,20 +413,29 @@ activeChat===chat.id
 >
 
 
+
+
+
 <div
 
 onClick={()=>{
+
 
 onSelectChat(chat.id);
 
 setSidebarOpen(false);
 
+
 }}
 
 className="
+
 truncate
+
 text-sm
+
 flex-1
+
 "
 
 >
@@ -300,12 +447,13 @@ flex-1
 
 
 
+
+
+
+
 <button
 
-onClick={()=>
-
-
-setOpenMenu(
+onClick={()=>setOpenMenu(
 
 openMenu===chat.id
 
@@ -317,15 +465,18 @@ null
 
 chat.id
 
-)
-
-}
+)}
 
 className="
-text-zinc-400
+
+text-zinc-500
+
 opacity-0
+
 group-hover:opacity-100
+
 px-2
+
 "
 
 >
@@ -338,23 +489,50 @@ px-2
 
 
 
+
+
+
+
 {
+
 openMenu===chat.id && (
 
 <div
 
 className="
+
 absolute
+
 right-2
+
 top-10
+
 w-40
-bg-zinc-800
+
+
+bg-white
+
+dark:bg-zinc-800
+
+
 border
-border-zinc-700
+
+border-zinc-200
+
+dark:border-zinc-700
+
+
 rounded-lg
+
+
 shadow-xl
+
+
 z-50
+
+
 py-2
+
 "
 
 >
@@ -363,44 +541,7 @@ py-2
 
 <button
 
-className="
-block
-w-full
-text-left
-px-4
-py-2
-hover:bg-zinc-700
-text-sm
-"
-
-onClick={()=>{
-
-alert("Share coming soon");
-
-setOpenMenu(null);
-
-}}
-
->
-
-Share
-
-</button>
-
-
-
-
-<button
-
-className="
-block
-w-full
-text-left
-px-4
-py-2
-hover:bg-zinc-700
-text-sm
-"
+className="menu-item"
 
 onClick={()=>{
 
@@ -412,24 +553,17 @@ setOpenMenu(null);
 
 >
 
-Rename
+{t.rename || "Rename"}
 
 </button>
 
 
 
 
+
 <button
 
-className="
-block
-w-full
-text-left
-px-4
-py-2
-hover:bg-zinc-700
-text-sm
-"
+className="menu-item"
 
 onClick={()=>{
 
@@ -441,24 +575,17 @@ setOpenMenu(null);
 
 >
 
-Pin chat
+{t.pin || "Pin"}
 
 </button>
 
 
 
 
+
 <button
 
-className="
-block
-w-full
-text-left
-px-4
-py-2
-hover:bg-zinc-700
-text-sm
-"
+className="menu-item"
 
 onClick={()=>{
 
@@ -470,9 +597,12 @@ setOpenMenu(null);
 
 >
 
-Archive
+{t.archive || "Archive"}
 
 </button>
+
+
+
 
 
 
@@ -480,14 +610,25 @@ Archive
 <button
 
 className="
+
 block
+
 w-full
+
 text-left
+
 px-4
+
 py-2
-hover:bg-zinc-700
+
+hover:bg-zinc-100
+
+dark:hover:bg-zinc-700
+
 text-sm
-text-red-400
+
+text-red-500
+
 "
 
 onClick={()=>{
@@ -500,7 +641,7 @@ setOpenMenu(null);
 
 >
 
-Delete
+{t.delete || "Delete"}
 
 </button>
 
@@ -514,6 +655,8 @@ Delete
 
 
 
+
+
 </div>
 
 
@@ -523,20 +666,72 @@ Delete
 
 
 
+
+
+
+
+{
+
+filteredChats.length===0 && (
+
+<p
+
+className="
+
+text-sm
+
+text-zinc-500
+
+text-center
+
+mt-4
+
+"
+
+>
+
+{t.noChats}
+
+</p>
+
+)
+
+}
+
+
+
+
+
+
 </div>
 
 
 
 
-<div className="
+
+
+
+<div
+
+className="
+
 text-sm
+
 text-zinc-500
+
 mt-4
-">
+
+"
+
+>
 
 © Rony Ghanem
 
 </div>
+
+
+
+
 
 
 

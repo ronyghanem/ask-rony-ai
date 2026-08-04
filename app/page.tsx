@@ -1,6 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import {
+useState,
+useEffect
+} from "react";
+
 
 import Sidebar from "@/components/Sidebar";
 import Navbar from "@/components/Navbar";
@@ -8,7 +12,10 @@ import ChatHeader from "@/components/ChatHeader";
 import ChatContainer from "@/components/ChatContainer";
 import ChatInput from "@/components/ChatInput";
 
+
 import { Chat } from "@/types/chat";
+
+
 
 
 export default function Home(){
@@ -24,7 +31,7 @@ const [sidebarOpen,setSidebarOpen]=useState(false);
 
 
 
-// Load chats
+
 
 useEffect(()=>{
 
@@ -47,7 +54,6 @@ JSON.parse(savedChats)
 }
 
 
-
 if(savedActive){
 
 setActiveChat(savedActive);
@@ -60,17 +66,15 @@ setActiveChat(savedActive);
 
 
 
-// Save chats
+
+
 
 useEffect(()=>{
 
 
 localStorage.setItem(
-
 "rony-chats",
-
 JSON.stringify(chats)
-
 );
 
 
@@ -79,7 +83,6 @@ JSON.stringify(chats)
 
 
 
-// Save active chat
 
 useEffect(()=>{
 
@@ -87,11 +90,8 @@ useEffect(()=>{
 if(activeChat){
 
 localStorage.setItem(
-
 "active-chat",
-
 activeChat
-
 );
 
 }
@@ -103,11 +103,13 @@ activeChat
 
 
 
+
 function newChat(){
 
 
 const id =
 crypto.randomUUID();
+
 
 
 setChats(prev=>[
@@ -138,122 +140,114 @@ setActiveChat(id);
 
 
 
-async function sendMessage(message:string){
+async function generateChatTitle(
+message:string,
+answer:string,
+chatId:string
+){
+
+try{
 
 
-let chatId =
-activeChat;
-
-
-
-if(!chatId){
-
-
-chatId =
-crypto.randomUUID();
-
-
-setChats(prev=>[
-
+const res = await fetch(
+"/api/title",
 {
-
-id:chatId!,
-
-title:message.slice(0,30),
-
-messages:[]
-
+method:"POST",
+headers:{
+"Content-Type":"application/json"
 },
+body:JSON.stringify({
 
-...prev
+message,
 
-]);
+answer
 
-
-setActiveChat(chatId);
-
-
+})
 }
+);
 
+
+
+const data =
+await res.json();
+
+
+
+if(!data.title)
+return;
 
 
 
 setChats(prev=>
 
-prev.map(chat=>
+prev.map(chat=>{
 
-chat.id===chatId
 
-?
+if(chat.id !== chatId)
 
-{
+return chat;
+
+
+
+return {
 
 ...chat,
 
+title:data.title
 
-title:
-chat.title==="New conversation"
+};
 
-?
-
-message.slice(0,30)
-
-:
-
-chat.title,
-
-
-messages:[
-
-...chat.messages,
-
-
-{
-
-role:"user",
-
-content:message,
-
-timestamp:new Date().toLocaleTimeString([],{
-
-hour:"2-digit",
-
-minute:"2-digit"
 
 })
-
-}
-
-]
-
-
-}
-
-:
-
-chat
-
-
-)
 
 );
 
 
 
+}
 
+catch(error){
+
+console.error(
+"TITLE ERROR:",
+error
+);
+
+}
+
+
+}
+
+
+
+
+
+
+
+
+
+async function sendAIMessage(
+message:string,
+chatId:string,
+makeTitle=true
+){
 
 setLoading(true);
-
 
 
 try{
 
 
+const language =
+localStorage.getItem("language")
+||
+"en-US";
+
+
+
 const res =
 await fetch(
-
 "/api/chat",
-
 {
 
 method:"POST",
@@ -266,7 +260,9 @@ headers:{
 
 body:JSON.stringify({
 
-message
+message,
+
+language
 
 })
 
@@ -276,16 +272,20 @@ message
 
 
 
+
+
+if(!res.body)
+
+throw new Error(
+"No response body"
+);
+
+
+
+
+
 const reader =
-res.body?.getReader();
-
-
-
-if(!reader){
-
-throw new Error("No stream");
-
-}
+res.body.getReader();
 
 
 
@@ -294,29 +294,34 @@ new TextDecoder();
 
 
 
-let assistantMessage="";
+let answer="";
 
 
 
 
+
+
+
+// Add empty assistant message
 
 setChats(prev=>
 
-prev.map(chat=>
+prev.map(chat=>{
 
-chat.id===chatId
 
-?
+if(chat.id!==chatId)
 
-{
+return chat;
+
+
+
+return {
 
 ...chat,
-
 
 messages:[
 
 ...chat.messages,
-
 
 {
 
@@ -324,28 +329,18 @@ role:"assistant",
 
 content:"",
 
-timestamp:new Date().toLocaleTimeString([],{
-
-hour:"2-digit",
-
-minute:"2-digit"
-
-})
+timestamp:
+new Date()
+.toLocaleTimeString()
 
 }
-
 
 ]
 
-
-}
-
-:
-
-chat
+};
 
 
-)
+})
 
 );
 
@@ -355,8 +350,9 @@ chat
 
 
 
-while(true){
 
+
+while(true){
 
 
 const {
@@ -369,16 +365,21 @@ value
 
 
 
-if(done) break;
+if(done)
+
+break;
 
 
 
-const chunk =
-decoder.decode(value);
+
+answer += decoder.decode(
+value,
+{
+stream:true
+}
+);
 
 
-
-assistantMessage += chunk;
 
 
 
@@ -386,49 +387,63 @@ assistantMessage += chunk;
 
 setChats(prev=>
 
-prev.map(chat=>
+prev.map(chat=>{
 
-chat.id===chatId
 
-?
+if(chat.id!==chatId)
 
-{
+return chat;
+
+
+
+return {
 
 ...chat,
 
-
 messages:
 
-chat.messages.map((msg,index)=>
+chat.messages.map(
+(msg,index)=>{
 
-index===chat.messages.length-1
 
-?
+if(
 
-{
+index ===
+chat.messages.length-1
+
+&&
+
+msg.role==="assistant"
+
+){
+
+
+return {
 
 ...msg,
 
-content:assistantMessage
+content:answer
 
-}
-
-:
-
-msg
-
-
-)
+};
 
 
 }
 
-:
 
-chat
 
+return msg;
+
+
+
+}
 
 )
+
+};
+
+
+
+})
 
 );
 
@@ -438,13 +453,29 @@ chat
 
 
 
+
+
+
+if(makeTitle){
+
+await generateChatTitle(
+message,
+answer,
+chatId
+);
+
+}
+
+
+
 }
 
 catch(error){
 
-
-console.error(error);
-
+console.error(
+"AI ERROR:",
+error
+);
 
 
 }
@@ -467,109 +498,241 @@ setLoading(false);
 
 
 
+
+async function sendMessage(
+message:string
+){
+
+
+if(!message.trim())
+
+return;
+
+
+
+let chatId =
+activeChat;
+
+
+
+
+
+if(!chatId){
+
+
+chatId =
+crypto.randomUUID();
+
+
+
+setChats(prev=>[
+
+{
+
+id:chatId,
+
+title:"Generating title...",
+
+messages:[]
+
+},
+
+...prev
+
+]);
+
+
+
+setActiveChat(chatId);
+
+
+}
+
+
+
+
+
+
+// Add user message
+
+setChats(prev=>
+
+prev.map(chat=>{
+
+
+if(chat.id!==chatId)
+
+return chat;
+
+
+
+return {
+
+...chat,
+
+messages:[
+
+...chat.messages,
+
+{
+
+role:"user",
+
+content:message,
+
+timestamp:
+new Date()
+.toLocaleTimeString()
+
+}
+
+]
+
+};
+
+
+})
+
+);
+
+
+
+
+
+
+
+await sendAIMessage(
+message,
+chatId
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+async function regenerateMessage(
+index:number
+){
+
+
+const chat =
+chats.find(
+c=>c.id===activeChat
+);
+
+
+
+if(!chat)
+
+return;
+
+
+
+
+
+const userMessage =
+chat.messages[index-1];
+
+
+
+
+
+if(
+!userMessage ||
+userMessage.role!=="user"
+)
+
+return;
+
+
+
+
+
+
+
+// remove old assistant answer
+
+setChats(prev=>
+
+prev.map(chat=>{
+
+
+if(chat.id!==activeChat)
+
+return chat;
+
+
+
+return {
+
+...chat,
+
+messages:
+chat.messages.slice(
+0,
+index
+)
+
+};
+
+
+})
+
+);
+
+
+
+
+
+
+
+await sendAIMessage(
+
+userMessage.content,
+
+activeChat!,
+
+false
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+
 function deleteChat(id:string){
 
 
 setChats(prev=>
 
-prev.filter(chat=>
-
-chat.id!==id
-
+prev.filter(
+chat=>chat.id!==id
 )
 
 );
 
 
 
-if(activeChat===id){
+if(activeChat===id)
 
 setActiveChat(null);
 
-}
-
-
-}
-
-
-
-
-
-function renameChat(id:string){
-
-
-const name =
-prompt("New chat name");
-
-
-if(!name)return;
-
-
-
-setChats(prev=>
-
-prev.map(chat=>
-
-chat.id===id
-
-?
-
-{
-
-...chat,
-
-title:name
-
-}
-
-:
-
-chat
-
-
-)
-
-);
-
-
-}
-
-
-
-
-
-function pinChat(id:string){
-
-
-setChats(prev=>{
-
-
-const chat =
-prev.find(c=>c.id===id);
-
-
-
-if(!chat)return prev;
-
-
-
-return [
-
-{
-
-...chat,
-
-title:"📌 "+chat.title
-
-},
-
-...prev.filter(c=>c.id!==id)
-
-];
-
-
-});
-
 
 }
 
@@ -578,35 +741,19 @@ title:"📌 "+chat.title
 
 
 
-function archiveChat(id:string){
-
-
-setChats(prev=>
-
-prev.filter(chat=>
-
-chat.id!==id
-
-)
-
-);
-
-
-}
 
 
 
 
-
-const currentMessages =
+const messages =
 
 chats.find(
+chat=>chat.id===activeChat
+)
+?.messages || [];
 
-chat=>
 
-chat.id===activeChat
 
-)?.messages || [];
 
 
 
@@ -615,16 +762,19 @@ chat.id===activeChat
 
 return (
 
-<div className="
+<div
+
+className="
 flex
 h-screen
-bg-zinc-900
-">
+bg-zinc-100
+dark:bg-zinc-900
+"
 
+>
 
 
 <Sidebar
-
 
 chats={chats}
 
@@ -636,16 +786,15 @@ onSelectChat={setActiveChat}
 
 onDeleteChat={deleteChat}
 
-onRenameChat={renameChat}
+onRenameChat={()=>{}}
 
-onPinChat={pinChat}
+onPinChat={()=>{}}
 
-onArchiveChat={archiveChat}
+onArchiveChat={()=>{}}
 
 sidebarOpen={sidebarOpen}
 
 setSidebarOpen={setSidebarOpen}
-
 
 />
 
@@ -653,61 +802,20 @@ setSidebarOpen={setSidebarOpen}
 
 
 
-<div className="
+
+
+<div
+
+className="
 flex-1
 flex
 flex-col
-">
-
-
-
-
-
-<div className="
-md:hidden
-flex
-items-center
-justify-between
-p-4
-bg-zinc-950
-border-b
-border-zinc-800
-">
-
-<button
-
-onClick={()=>setSidebarOpen(true)}
-
-className="
-text-white
-text-2xl
 "
 
 >
 
-☰
-
-</button>
-
-
-<h1 className="
-text-white
-font-semibold
-">
-
-Ask Rony AI
-
-</h1>
-
-
-</div>
-
-
-
-
 
 <Navbar/>
-
 
 <ChatHeader/>
 
@@ -717,13 +825,16 @@ Ask Rony AI
 
 <ChatContainer
 
-messages={currentMessages}
+messages={messages}
 
 loading={loading}
 
 onSuggestionClick={sendMessage}
 
+onRegenerate={regenerateMessage}
+
 />
+
 
 
 
@@ -736,6 +847,8 @@ onSend={sendMessage}
 loading={loading}
 
 />
+
+
 
 
 

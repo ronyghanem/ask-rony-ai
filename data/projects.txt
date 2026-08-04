@@ -1,0 +1,34 @@
+Projects:
+
+
+Talent Radar AI
+
+Description:
+An AI-powered application focused on talent discovery and matching.
+
+Technologies:
+- Next.js
+- React
+- AI Integration
+
+
+Secure Chat Application
+
+Description:
+A secure messaging application.
+
+Technologies:
+- Next.js
+- Real-time communication
+
+
+Personal Trainer Website
+
+Description:
+A website for personal training services.
+
+
+Tic Tac Toe Game
+
+Description:
+A web-based Tic Tac Toe game.

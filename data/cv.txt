@@ -1,0 +1,85 @@
+Personal Details
+Name : Rony Ghanem
+Address : Beirut-Lebanon Werhanieh-Mount Lebanon
+Phone : +961 81 936 112
+Email : ronyghanem2003@gmail.com
+GitHub : https://github.com/ronyghanem
+LinkedIn : https://www.linkedin.com/in/rony-ghanem/
+Portfolio : https://ronygh.netlify.app
+
+
+
+Education
+2024-2025 Lebanese University-Faculty of Economics and Business Administration
+Master’s in Management Information Systems
+2023-2024 Lebanese University-Faculty of Economics and Business Administration
+Bachelor’s Degree in Management Information Systems
+2020-2021 Batloun Official Secondary School
+Lebanese Baccalaureate in Social Studies and Economics
+2017-2018 Warhanieh Official Intermediate School
+Brevet Certificate
+
+Profesional Experience
+Freelance Web Developer
+Jan 2024 – Present
+• Developed and delivered 10+ responsive web applications using modern web technologies, implementing user-focused features and optimizing
+functionality across desktop and mobile platforms.
+• Engineered a PHP-based search engine featuring TF-IDF ranking, cosine similarity, query correction, and an interactive HTML/CSS interface,
+enabling accurate and efficient text retrieval.
+• Built an advanced 3D model viewer with Three.js supporting GLTF, OBJ, and STL formats, incorporating clipping tools, annotations,
+measurements, GUI controls, and state persistence to enhance model visualization and analysis.
+• Collaborated with clients to gather requirements, troubleshoot technical issues, and deliver customized web solutions aligned with project
+objectives.
+Programming Instructor – Prodigy Mind Center
+Nov 2025 – Present
+• Taught Object-Oriented Programming (OOP) and Data Structures to 20+ students through hands-on coding exercises, practical projects, and
+real-world problem-solving scenarios.
+• Mentored students individually, helping strengthen their understanding of algorithms, software design principles, debugging techniques, and
+programming best practices.
+• Designed and delivered engaging learning activities that improved students' logical thinking, coding proficiency, and confidence in software
+development concepts.
+• Evaluated student progress and adapted teaching approaches to accommodate different learning styles and skill levels.
+Web Developer Intern — Prodigy InfoTech (Remote)
+Sep 2025 – Oct 2025
+• Developed responsive web applications and interactive front-end features, improving usability and ensuring consistent performance across
+multiple devices and screen sizes.
+• Implemented responsive design techniques, API integrations, and dynamic user interface components to create functional and user-friendly
+web experiences.
+• Maintained project documentation and source code through GitHub, demonstrating effective version control practices and transparent
+development workflows.
+• Showcased project outcomes and technical insights on LinkedIn, highlighting continuous learning and professional growth throughout the
+internship.
+
+
+Skills
+Programming
+Languages
+: HTML, CSS, JavaScript, PHP, C++, C#, Java, Python, Nextjs
+Machine Learning
+(ML)
+: Classification, Regression, Clustering, Reinforcement Learning
+Version Control : Git, GitHub
+Computer Skills : Microsoft Word, Microsoft Excel, Microsoft PowerPoint,Visual Studio, VS Code, NetBeans
+Soft Skills : Communication & Teamwork,Problem-Solving & Critical Thinking, Leadership & Initiative, Time Management
+& Attention to Detail, Adaptability & Creativity
+Languages : Fluent in English, Proficient in Arabic
+Databases : SQL Server
+
+
+Certifications
+Kanz AI Showcase Certificate (Kanz AI) – Successfully completed the Kanz AI program and developed Talent Radar AI, an AI-powered
+recruitment platform. Gained hands-on experience in agentic AI workflows, prompt engineering, AI-assisted application development, full-stack
+web development, product deployment, and building real-world AI solutions (Jul 2026).
+Artificial Intelligence Fundamentals (IBM) - Gained practical skills in AI concepts, machine learning basics, and intelligent systems (Nov
+2025).
+HTML5 & CSS3 Complete Course - Build Websites Like a Pro (Udemy) - Learned to build responsive websites using HTML5 & CSS3 with
+gained skills in layouts, forms and styling best practices (Sep 2025).
+JavaScript Master Course From Beginner to Expert Developer (Udemy) - Mastered core JavaScript, DOM manipulation, ES6+, and building
+interactive web apps (Sep 2025).
+AI Productivity Tools Training (UNICEF-GIL Program) - Completed a 4-hour training on using AI tools to boost productivity and innovation
+(May 2025).
+Building AI Agents Workshop IEEE BAU & RASS - Participated in an intensive 2-day workshop focused on designing and developing AI
+agents, gaining hands-on experience and theoretical foundations in AI systems (April 2025).
+Activities and Volunteering
+• Volunteer – Farah Social Foundation: Supported community initiatives and social programs aimed at empowering underprivileged groups.
+• Music Enthusiast, Fitness Training, Avid Reader

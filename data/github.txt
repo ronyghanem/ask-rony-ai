@@ -1,0 +1,32 @@
+GitHub Projects:
+
+
+Talent Radar AI
+
+Repository:
+github link here
+
+Description:
+AI-powered recruitment platform.
+
+Technologies:
+Next.js
+React
+MongoDB
+
+
+CRM Pro
+
+Description:
+Full-stack CRM system.
+
+Features:
+- Dashboard
+- Leads management
+- Customers
+- Reports
+
+Technologies:
+Next.js
+Supabase
+Tailwind CSS
