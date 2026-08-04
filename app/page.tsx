@@ -498,58 +498,37 @@ setLoading(false);
 
 
 
-
-async function sendMessage(
-message:string
-){
-
+async function sendMessage(message:string){
 
 if(!message.trim())
-
 return;
 
 
-
-let chatId =
-activeChat;
+let chatId = activeChat;
 
 
+// Create new chat if none exists
+if(chatId === null){
+
+chatId = crypto.randomUUID();
 
 
-
-if(!chatId){
-
-
-chatId =
-crypto.randomUUID();
-
+const newChat: Chat = {
+id: chatId,
+title:"New conversation",
+messages:[]
+};
 
 
 setChats(prev=>[
-
-{
-
-id:chatId,
-
-title:"Generating title...",
-
-messages:[]
-
-},
-
+newChat,
 ...prev
-
 ]);
-
 
 
 setActiveChat(chatId);
 
-
 }
-
-
-
 
 
 
@@ -560,7 +539,7 @@ setChats(prev=>
 prev.map(chat=>{
 
 
-if(chat.id!==chatId)
+if(chat.id !== chatId)
 
 return chat;
 
@@ -580,8 +559,7 @@ role:"user",
 
 content:message,
 
-timestamp:
-new Date()
+timestamp:new Date()
 .toLocaleTimeString()
 
 }
@@ -599,17 +577,13 @@ new Date()
 
 
 
-
-
 await sendAIMessage(
 message,
 chatId
 );
 
 
-
 }
-
 
 
 
@@ -622,19 +596,13 @@ async function regenerateMessage(
 index:number
 ){
 
-
-const chat =
-chats.find(
+const chat = chats.find(
 c=>c.id===activeChat
 );
 
 
-
-if(!chat)
-
+if(!chat || !activeChat)
 return;
-
-
 
 
 
@@ -643,40 +611,31 @@ chat.messages[index-1];
 
 
 
-
-
 if(
 !userMessage ||
-userMessage.role!=="user"
+userMessage.role !== "user"
 )
-
 return;
 
 
 
-
-
-
-
-// remove old assistant answer
+// Remove old AI response
 
 setChats(prev=>
 
-prev.map(chat=>{
+prev.map(c=>{
 
 
-if(chat.id!==activeChat)
-
-return chat;
+if(c.id !== activeChat)
+return c;
 
 
 
 return {
 
-...chat,
+...c,
 
-messages:
-chat.messages.slice(
+messages:c.messages.slice(
 0,
 index
 )
@@ -690,20 +649,17 @@ index
 
 
 
-
-
-
+// Generate new AI answer
 
 await sendAIMessage(
 
 userMessage.content,
 
-activeChat!,
+activeChat,
 
 false
 
 );
-
 
 
 }
