@@ -106,8 +106,7 @@ activeChat
 function newChat(){
 
 
-const id:string =
-crypto.randomUUID();
+const id:string = crypto.randomUUID();
 
 
 
@@ -137,7 +136,6 @@ setActiveChat(id);
 
 
 }
-
 
 
 
@@ -512,9 +510,7 @@ setLoading(false);
 
 
 }
-async function sendMessage(
-    message:string
-){
+async function sendMessage(message:string){
 
 if(!message.trim())
 return;
@@ -525,25 +521,21 @@ let chatId:string;
 
 
 
-// Existing chat
-if(activeChat){
+if(activeChat !== null){
 
 chatId = activeChat;
 
 }
 
-
-// Create new chat automatically
 else{
 
 
-chatId = crypto.randomUUID();
-
+const newId:string = crypto.randomUUID();
 
 
 const newChat:Chat = {
 
-id:chatId,
+id:newId,
 
 title:"New conversation",
 
@@ -554,26 +546,23 @@ messages:[]
 
 
 setChats(prev=>[
-
 newChat,
-
 ...prev
-
 ]);
 
 
 
-setActiveChat(chatId);
+setActiveChat(newId);
 
+
+
+chatId = newId;
 
 }
 
 
 
 
-
-
-// Add user message
 
 setChats(prev=>
 
@@ -600,9 +589,7 @@ role:"user",
 
 content:message,
 
-timestamp:
-
-new Date()
+timestamp:new Date()
 .toLocaleTimeString()
 
 }
@@ -616,8 +603,6 @@ new Date()
 })
 
 );
-
-
 
 
 
